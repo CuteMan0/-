@@ -11,12 +11,14 @@ void dht20_run(float *pdht20)
 		HAL_Delay(100);//上电100ms等待
 		init -= 1;
 	}
-	HAL_I2C_Master_Receive(&hi2c1,0x71,pr_DAT,1,100);//读状态字
+	HAL_I2C_Master_Receive(&hi2c2,0x71,pr_DAT,1,100);//读状态字
+	// I2C_Receive(0x71,pr_DAT,1);//读状态字
 		
 	if( (pr_DAT[0] & 0x10) && (pr_DAT[0] &0x08) )
 	{
 		HAL_Delay(10);
-		HAL_I2C_Master_Transmit(&hi2c1,0x71,pt_DAT,3,100);//触发测量
+		HAL_I2C_Master_Transmit(&hi2c2,0x71,pt_DAT,3,100);//触发测量
+		// I2C_Transmit(0x71,pt_DAT,3);//触发测量
 	}
 	else
 	{
@@ -24,7 +26,8 @@ void dht20_run(float *pdht20)
 	}
 	HAL_Delay(80);//等待转换
 
-	HAL_I2C_Master_Receive(&hi2c1,0x71,pr_DAT,7,100);//接受数据
+	HAL_I2C_Master_Receive(&hi2c2,0x71,pr_DAT,7,100);//接受数据
+	// I2C_Receive(0x71,pr_DAT,7);//接受数据
 	while( pr_DAT[0]&0x80 )
 	{
 		;//正忙

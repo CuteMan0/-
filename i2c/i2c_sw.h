@@ -6,7 +6,14 @@
 typedef enum {
     ACK = 0,
     NACK
-}ACK_Typedef;
+}I2C_ACKTypedef;
+
+typedef enum {
+    Ok      = 0x00U,
+    Error   = 0x01U,
+    Busy    = 0x02U,
+    Timeout = 0x03U
+} I2C_StatusTypeDef;
 
 #define SCL_PORT GPIOB
 #define SCL_PIN  GPIO_PIN_10
@@ -19,14 +26,14 @@ typedef enum {
 
 void I2C_Start(void);
 void I2C_Stop(void);
-void I2C_SendAck(ACK_Typedef ACK_Bit);
+void I2C_SendAck(I2C_ACKTypedef ACK_Bit);
+I2C_ACKTypedef I2C_ReceiveAck(void);
 
 void I2C_WriteByte(uint8_t I2C_Byte);
 uint8_t I2C_ReadByte(void);
-ACK_Typedef I2C_ReceiveAck(void);
 
-void I2C_Transmit(uint8_t Salve_Address, uint8_t *pDATA, uint8_t length);
-void I2C_Receive(uint8_t Salve_Address, uint8_t *pDATA, uint8_t length);
+I2C_StatusTypeDef I2C_Transmit(uint8_t Salve_Address, uint8_t *pDATA, uint8_t Length);
+I2C_StatusTypeDef I2C_Receive(uint8_t Salve_Address, uint8_t *pDATA, uint8_t Length);
 
 void SW_I2C_Init(void);
 
