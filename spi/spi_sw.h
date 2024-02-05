@@ -26,9 +26,11 @@
 #define MISO_GET  HAL_GPIO_ReadPin(MISO_Port, MISO_Pin)
 
 void SPI_WriteByte(uint8_t SPI_Byte);
+void SPI_Write16bit(uint16_t SPI_DoubleByte);
 uint8_t SPI_ReadByte(void);
 
 void SPI_Transmit(uint8_t *pDATA, uint8_t Length);
+void SPI_Transmit_16bit(uint16_t *pDATA, uint8_t Length);
 void SPI_Receive(uint8_t *pDATA, uint8_t Length);
 void SPI_TransmitReceive(uint8_t *pTxDATA, uint8_t *pRxDATA, uint8_t Length);
 
