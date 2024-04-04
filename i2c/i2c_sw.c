@@ -163,7 +163,7 @@ I2C_StatusTypeDef I2C_Receive(uint8_t Salve_Address, uint8_t *pDATA, uint8_t Len
  * @param  无
  * @retval 无
  */
-void SW_I2C_Init(void)
+void I2C_SW_Init(void)
 {
     __HAL_RCC_GPIOB_CLK_ENABLE();
 

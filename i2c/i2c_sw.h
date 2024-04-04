@@ -35,6 +35,6 @@ uint8_t I2C_ReadByte(void);
 I2C_StatusTypeDef I2C_Transmit(uint8_t Salve_Address, uint8_t *pDATA, uint8_t Length);
 I2C_StatusTypeDef I2C_Receive(uint8_t Salve_Address, uint8_t *pDATA, uint8_t Length);
 
-void SW_I2C_Init(void);
+void I2C_SW_Init(void);
 
 #endif

@@ -4,7 +4,7 @@
 // SDA PB7
 #define SSD1306_ADDRESS 0x78
 
-void HW_I2C_Write(uint8_t *buf,uint8_t len)
+void I2C_HW_Write(uint8_t *buf,uint8_t len)
 {
 	if(len<=0)
 		return ;
@@ -43,7 +43,7 @@ void HW_I2C_Write(uint8_t *buf,uint8_t len)
 
 
 
-void IIC_HW_Init(void)
+void I2C_HW_Init(void)
 {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);		//开启I2C2的时钟
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);		//开启GPIOB的时钟

@@ -1,4 +1,3 @@
-#include "stm32f10x.h"
 #include "oled.h"
 #include "oled_font.h"
 
@@ -7,20 +6,20 @@
   * @param  CMD 要写入的命令
   * @retval 无
   */
-void OLED_CMD(u8 CMD)
+void OLED_CMD(uint8_t CMD)
 {
-    IIC_Start();
+    I2C_Start();
  
-    IIC_WriteByte(0x78);
-    IIC_ReceiveAck();
+    I2C_WriteByte(0x78);
+    I2C_ReceiveAck();
  
-    IIC_WriteByte(0x80);
-    IIC_ReceiveAck();
+    I2C_WriteByte(0x80);
+    I2C_ReceiveAck();
  
-    IIC_WriteByte(CMD);
-    IIC_ReceiveAck();
+    I2C_WriteByte(CMD);
+    I2C_ReceiveAck();
  
-    IIC_Stop();
+    I2C_Stop();
 }
 
 /**
@@ -28,20 +27,20 @@ void OLED_CMD(u8 CMD)
   * @param  DATA 要写入的数据
   * @retval 无
   */
-void OLED_DATA(u8 DATA)
+void OLED_DATA(uint8_t DATA)
 {
-    IIC_Start();
+    I2C_Start();
  
-    IIC_WriteByte(0x78);
-    IIC_ReceiveAck();
+    I2C_WriteByte(0x78);
+    I2C_ReceiveAck();
  
-    IIC_WriteByte(0xC0);
-    IIC_ReceiveAck();
+    I2C_WriteByte(0xC0);
+    I2C_ReceiveAck();
  
-    IIC_WriteByte(DATA);
-    IIC_ReceiveAck();
+    I2C_WriteByte(DATA);
+    I2C_ReceiveAck();
  
-    IIC_Stop();
+    I2C_Stop();
 }
 
 /**
@@ -261,12 +260,12 @@ void OLED_ShowBMP(const uint8_t *bmp)
 void OLED_Init(void)
 {
 
-		for (u16 i = 0; i < 1000; i++)			//上电延时
+		for (uint16_t i = 0; i < 1000; i++)			//上电延时
 	{
-		for (u8 j = 0; j < 100; j++);
+		for (uint8_t j = 0; j < 100; j++);
 	}
 	
-	IIC_SW_Init();			//端口初始化
+	I2C_SW_Init();			//端口初始化
 	
 	OLED_CMD(0xAE);	//关闭显示
 	
