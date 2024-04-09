@@ -9,16 +9,16 @@ typedef enum {
 }I2C_ACKTypedef;
 
 typedef enum {
-    Ok      = 0x00U,
-    Error   = 0x01U,
-    Busy    = 0x02U,
-    Timeout = 0x03U
+    I2C_OK      = 0x00U,
+    I2C_ERROR   = 0x01U,
+    I2C_BUSY    = 0x02U,
+    I2C_TIMEOUT = 0x03U
 } I2C_StatusTypeDef;
 
-#define SCL_PORT GPIOB
-#define SCL_PIN  GPIO_PIN_10
-#define SDA_PORT GPIOB
-#define SDA_PIN  GPIO_PIN_11
+#define SCL_PORT GPIOA
+#define SCL_PIN  GPIO_PIN_1
+#define SDA_PORT GPIOA
+#define SDA_PIN  GPIO_PIN_8
 
 #define SCL(x)   HAL_GPIO_WritePin(SCL_PORT, SCL_PIN, (GPIO_PinState)(x))
 #define SDA(x)   HAL_GPIO_WritePin(SDA_PORT, SDA_PIN, (GPIO_PinState)(x))

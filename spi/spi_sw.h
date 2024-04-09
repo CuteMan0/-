@@ -3,27 +3,27 @@
 
 #include "stm32f1xx_hal.h"
 
-#define SCK_Port  GPIOA
-#define SCK_Pin   GPIO_PIN_5
-#define MOSI_Port GPIOA
-#define MOSI_Pin  GPIO_PIN_7
-#define MISO_Port GPIOA
-#define MISO_Pin  GPIO_PIN_1
-#define RST_Port  GPIOB
-#define RST_Pin   GPIO_PIN_0
-#define DC_Port   GPIOB
-#define DC_Pin    GPIO_PIN_1
-#define CS_Port   GPIOA
-#define CS_Pin    GPIO_PIN_0
+#define SCK_PORT  GPIOA
+#define SCK_PIN   GPIO_PIN_5
+#define MOSI_PORT GPIOA
+#define MOSI_PIN  GPIO_PIN_7
+#define MISO_PORT GPIOA
+#define MISO_PIN  GPIO_PIN_1
+#define RST_PORT  GPIOB
+#define RST_PIN   GPIO_PIN_0
+#define DC_PORT   GPIOB
+#define DC_PIN    GPIO_PIN_1
+#define CS_PORT   GPIOA
+#define CS_PIN    GPIO_PIN_0
 
-#define SCK(x)    HAL_GPIO_WritePin(SCK_Port, SCK_Pin, (GPIO_PinState)(x))
-#define MOSI(x)   HAL_GPIO_WritePin(MOSI_Port, MOSI_Pin, (GPIO_PinState)(x))
-#define MISO(x)   HAL_GPIO_WritePin(MISO_Port, MISO_Pin, (GPIO_PinState)(x))
-#define RST(x)    HAL_GPIO_WritePin(RST_Port, RST_Pin, (GPIO_PinState)(x))
-#define DC(x)     HAL_GPIO_WritePin(DC_Port, DC_Pin, (GPIO_PinState)(x))
-#define CS(x)     HAL_GPIO_WritePin(CS_Port, CS_Pin, (GPIO_PinState)(x))
+#define SCK(x)    HAL_GPIO_WritePin(SCK_PORT, SCK_PIN, (GPIO_PinState)(x))
+#define MOSI(x)   HAL_GPIO_WritePin(MOSI_PORT, MOSI_PIN, (GPIO_PinState)(x))
+#define MISO(x)   HAL_GPIO_WritePin(MISO_PORT, MISO_PIN, (GPIO_PinState)(x))
+#define RST(x)    HAL_GPIO_WritePin(RST_PORT, RST_PIN, (GPIO_PinState)(x))
+#define DC(x)     HAL_GPIO_WritePin(DC_PORT, DC_PIN, (GPIO_PinState)(x))
+#define CS(x)     HAL_GPIO_WritePin(CS_PORT, CS_PIN, (GPIO_PinState)(x))
 
-#define MISO_GET  HAL_GPIO_ReadPin(MISO_Port, MISO_Pin)
+#define MISO_GET  HAL_GPIO_ReadPin(MISO_PORT, MISO_PIN)
 
 void SPI_WriteByte(uint8_t SPI_Byte);
 void SPI_Write16bit(uint16_t SPI_DoubleByte);

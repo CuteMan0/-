@@ -1,12 +1,12 @@
 /**
   ******************************************************************************
     主频不高时可用寄存器写法替换
-    SCK(0)      <=>      SCK_Port->BSRR = SCK_Pin << 16u
-    SCK(1)      <=>      SCK_Port->BSRR = SCK_Pin
-    MOSI(0)     <=>      MOSI_Port->BSRR = MOSI_Pin << 16u
-    MOSI(1)     <=>      MOSI_Port->BSRR = MOSI_Pin
+    SCK(0)      <=>      SCK_PORT->BSRR = SCK_PIN << 16u
+    SCK(1)      <=>      SCK_PORT->BSRR = SCK_PIN
+    MOSI(0)     <=>      MOSI_PORT->BSRR = MOSI_PIN << 16u
+    MOSI(1)     <=>      MOSI_PORT->BSRR = MOSI_PIN
 
-    MISO_GET    <=>      MISO_Port->IDR & MISO_Pin
+    MISO_GET    <=>      MISO_PORT->IDR & MISO_PIN
   ******************************************************************************
   */
 
@@ -21,12 +21,12 @@ void SPI_WriteByte(uint8_t SPI_Byte)
 {
     // mode 0 / 3
     for (uint8_t i = 0; i < 8; i++) {
-        SCK_Port->BSRR = SCK_Pin << 16u;
+        SCK_PORT->BSRR = SCK_PIN << 16u;
         if (SPI_Byte & (0x80 >> i))
-            MOSI_Port->BSRR = MOSI_Pin;
+            MOSI_PORT->BSRR = MOSI_PIN;
         else
-            MOSI_Port->BSRR = MOSI_Pin << 16u;
-        SCK_Port->BSRR = SCK_Pin;
+            MOSI_PORT->BSRR = MOSI_PIN << 16u;
+        SCK_PORT->BSRR = SCK_PIN;
     }
 }
 
@@ -39,12 +39,12 @@ void SPI_Write16bit(uint16_t SPI_DoubleByte)
 {
     // mode 0 / 3
     for (uint8_t i = 0; i < 16; i++) {
-        SCK_Port->BSRR = SCK_Pin << 16u;
+        SCK_PORT->BSRR = SCK_PIN << 16u;
         if (SPI_DoubleByte & (0x8000 >> i))
-            MOSI_Port->BSRR = MOSI_Pin;
+            MOSI_PORT->BSRR = MOSI_PIN;
         else
-            MOSI_Port->BSRR = MOSI_Pin << 16u;
-        SCK_Port->BSRR = SCK_Pin;
+            MOSI_PORT->BSRR = MOSI_PIN << 16u;
+        SCK_PORT->BSRR = SCK_PIN;
     }
 }
 
@@ -58,12 +58,12 @@ uint8_t SPI_ReadByte(void) // 未验证
     // mode 0 / 3
     uint8_t SPI_Byte = 0x00;
     for (uint8_t i = 0; i < 8; i++) {
-        SCK_Port->BSRR = SCK_Pin;
+        SCK_PORT->BSRR = SCK_PIN;
 
-        if (MISO_Port->IDR & MISO_Pin)
+        if (MISO_PORT->IDR & MISO_PIN)
             SPI_Byte |= (0x80 >> i);
 
-        SCK_Port->BSRR = SCK_Pin << 16u;
+        SCK_PORT->BSRR = SCK_PIN << 16u;
     }
     return SPI_Byte;
 }
@@ -132,11 +132,11 @@ void SW_SPI_Init(void)
     __HAL_RCC_GPIOA_CLK_ENABLE();
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};
-    GPIO_InitStruct.Pin              = SCK_Pin | MOSI_Pin;
+    GPIO_InitStruct.Pin              = SCK_PIN | MOSI_PIN;
     GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull             = GPIO_NOPULL;
     GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(SCK_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(SCK_PORT, &GPIO_InitStruct);
 
-    HAL_GPIO_WritePin(SCK_Port, SCK_Pin | MOSI_Pin, 1);
+    HAL_GPIO_WritePin(SCK_PORT, SCK_PIN | MOSI_PIN, 1);
 }

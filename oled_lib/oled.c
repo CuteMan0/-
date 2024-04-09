@@ -45,8 +45,8 @@ void OLED_DATA(uint8_t DATA)
 
 /**
   * @brief  OLED设置光标位置
-  * @param  Y 以左上角为原点，向下方向的坐标，范围：0~7
-  * @param  X 以左上角为原点，向右方向的坐标，范围：0~127
+  * @param  Y 以左上角为原点，向下方向的坐标，范围：0-7
+  * @param  X 以左上角为原点，向右方向的坐标，范围：0-127
   * @retval 无
   */
 void OLED_SetCursor(uint8_t Y, uint8_t X)
@@ -96,8 +96,8 @@ void OLED_Fill(void)
 
 /**
   * @brief  OLED显示一个字符
-  * @param  Line 行位置，范围：1~4
-  * @param  Column 列位置，范围：1~16
+  * @param  Line 行位置，范围：1-4
+  * @param  Column 列位置，范围：1-16
   * @param  Char 要显示的一个字符，范围：ASCII可见字符
   * @retval 无
   */
@@ -118,8 +118,8 @@ void OLED_ShowChar(uint8_t Line, uint8_t Column, char Char)
 
 /**
   * @brief  OLED显示字符串
-  * @param  Line 起始行位置，范围：1~4
-  * @param  Column 起始列位置，范围：1~16
+  * @param  Line 起始行位置，范围：1-4
+  * @param  Column 起始列位置，范围：1-16
   * @param  String 要显示的字符串，范围：ASCII可见字符
   * @retval 无
   */
@@ -148,10 +148,10 @@ uint32_t OLED_Pow(uint32_t X, uint32_t Y)
 
 /**
   * @brief  OLED显示数字（十进制，正数）
-  * @param  Line 起始行位置，范围：1~4
-  * @param  Column 起始列位置，范围：1~16
-  * @param  Number 要显示的数字，范围：0~4294967295
-  * @param  Length 要显示数字的长度，范围：1~10
+  * @param  Line 起始行位置，范围：1-4
+  * @param  Column 起始列位置，范围：1-16
+  * @param  Number 要显示的数字，范围：0-4294967295
+  * @param  Length 要显示数字的长度，范围：1-10
   * @retval 无
   */
 void OLED_ShowNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length)
@@ -165,10 +165,10 @@ void OLED_ShowNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length)
 
 /**
   * @brief  OLED显示数字（十进制，带符号数）
-  * @param  Line 起始行位置，范围：1~4
-  * @param  Column 起始列位置，范围：1~16
-  * @param  Number 要显示的数字，范围：-2147483648~2147483647
-  * @param  Length 要显示数字的长度，范围：1~10
+  * @param  Line 起始行位置，范围：1-4
+  * @param  Column 起始列位置，范围：1-16
+  * @param  Number 要显示的数字，范围：-2147483648-2147483647
+  * @param  Length 要显示数字的长度，范围：1-10
   * @retval 无
   */
 void OLED_ShowSignedNum(uint8_t Line, uint8_t Column, int32_t Number, uint8_t Length)
@@ -193,10 +193,10 @@ void OLED_ShowSignedNum(uint8_t Line, uint8_t Column, int32_t Number, uint8_t Le
 
 /**
   * @brief  OLED显示数字（十六进制，正数）
-  * @param  Line 起始行位置，范围：1~4
-  * @param  Column 起始列位置，范围：1~16
-  * @param  Number 要显示的数字，范围：0~0xFFFFFFFF
-  * @param  Length 要显示数字的长度，范围：1~8
+  * @param  Line 起始行位置，范围：1-4
+  * @param  Column 起始列位置，范围：1-16
+  * @param  Number 要显示的数字，范围：0-0xFFFFFFFF
+  * @param  Length 要显示数字的长度，范围：1-8
   * @retval 无
   */
 void OLED_ShowHexNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length)
@@ -218,10 +218,10 @@ void OLED_ShowHexNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Leng
 
 /**
   * @brief  OLED显示数字（二进制，正数）
-  * @param  Line 起始行位置，范围：1~4
-  * @param  Column 起始列位置，范围：1~16
-  * @param  Number 要显示的数字，范围：0~1111 1111 1111 1111
-  * @param  Length 要显示数字的长度，范围：1~16
+  * @param  Line 起始行位置，范围：1-4
+  * @param  Column 起始列位置，范围：1-16
+  * @param  Number 要显示的数字，范围：0-1111 1111 1111 1111
+  * @param  Length 要显示数字的长度，范围：1-16
   * @retval 无
   */
 void OLED_ShowBinNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length)

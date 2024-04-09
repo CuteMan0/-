@@ -3,11 +3,11 @@
 /**
  * @brief 将测量数据上传主机
  *
- * @param l_uc 传入的是第一个超声波的地址
+ * @param l_uc 传入的是 帧头 的地址
  */
 void Ultrasonic_Upload(HC_SR04 *l_uc)
 {
-    uint16_t buffer[8] = {0x00};
+    uint16_t buffer[10] = {0x00};
     for (uint8_t i = 0; i < 8; i++) {
         buffer[i] = l_uc->data;
         l_uc++;
@@ -26,7 +26,7 @@ void Multi_Measure(HC_SR04 *l_uc)
     for (uint8_t i = 0; i < 8; i++) {
         Measure_lenth(l_uc++);
     }
-    HAL_Delay(60);
+    WAIT_FOR_NEXT(FPS40);
 }
 
 /**
@@ -40,17 +40,17 @@ void Measure_lenth(HC_SR04 *l_uc)
 
     // start measure
     HAL_GPIO_WritePin(l_uc->Trig_Port, l_uc->Trig_Pin, 1);
-    delay_us(10);
+    Delay_us(10);
     HAL_GPIO_WritePin(l_uc->Trig_Port, l_uc->Trig_Pin, 0);
 
     // start count
     HAL_TIM_Base_Start(&htim1);
 
-    while (!Echo_Ok)
+    while (!ECHO_OK)
         ;
     startTime = __HAL_TIM_GET_COUNTER(&htim1);
     // end count
-    while (Echo_Ok)
+    while (ECHO_OK)
         ;
     endTime = __HAL_TIM_GET_COUNTER(&htim1);
 
@@ -68,77 +68,77 @@ void Measure_lenth(HC_SR04 *l_uc)
 }
 
 /**
- * @brief HC_SR-04 Trig and Echo pin to gpio
+ * @brief HC_SR-04 TRIG and ECHO pin to gpio
  * @param l_uc 传入的是第一个超声波的地址
  */
 void HC_SR_Init(HC_SR04 *l_uc)
 {
-    /* GPIO Ports Clock Enable */
+    /* GPIO PORTs Clock Enable */
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
 
     // 对第一个超声波进行初始化
-    l_uc->Echo_Pin  = Echo_Pin_1;
-    l_uc->Echo_Port = Echo_Port_1;
-    l_uc->Trig_Pin  = Trig_Pin_1;
-    l_uc->Trig_Port = Trig_Port_1;
+    l_uc->Echo_Pin  = ECHO_PIN_1;
+    l_uc->Echo_Port = ECHO_PORT_1;
+    l_uc->Trig_Pin  = TRIG_PIN_1;
+    l_uc->Trig_Port = TRIG_PORT_1;
     Base_Init(l_uc);
 
     // 更新地址，初始化第二个超声波
     l_uc++;
-    l_uc->Echo_Pin  = Echo_Pin_2;
-    l_uc->Echo_Port = Echo_Port_2;
-    l_uc->Trig_Pin  = Trig_Pin_2;
-    l_uc->Trig_Port = Trig_Port_2;
+    l_uc->Echo_Pin  = ECHO_PIN_2;
+    l_uc->Echo_Port = ECHO_PORT_2;
+    l_uc->Trig_Pin  = TRIG_PIN_2;
+    l_uc->Trig_Port = TRIG_PORT_2;
     Base_Init(l_uc);
 
     // 3
     l_uc++;
-    l_uc->Echo_Pin  = Echo_Pin_3;
-    l_uc->Echo_Port = Echo_Port_3;
-    l_uc->Trig_Pin  = Trig_Pin_3;
-    l_uc->Trig_Port = Trig_Port_3;
+    l_uc->Echo_Pin  = ECHO_PIN_3;
+    l_uc->Echo_Port = ECHO_PORT_3;
+    l_uc->Trig_Pin  = TRIG_PIN_3;
+    l_uc->Trig_Port = TRIG_PORT_3;
     Base_Init(l_uc);
 
     // 4
     l_uc++;
-    l_uc->Echo_Pin  = Echo_Pin_4;
-    l_uc->Echo_Port = Echo_Port_4;
-    l_uc->Trig_Pin  = Trig_Pin_4;
-    l_uc->Trig_Port = Trig_Port_4;
+    l_uc->Echo_Pin  = ECHO_PIN_4;
+    l_uc->Echo_Port = ECHO_PORT_4;
+    l_uc->Trig_Pin  = TRIG_PIN_4;
+    l_uc->Trig_Port = TRIG_PORT_4;
     Base_Init(l_uc);
 
     // 5
     l_uc++;
-    l_uc->Echo_Pin  = Echo_Pin_5;
-    l_uc->Echo_Port = Echo_Port_5;
-    l_uc->Trig_Pin  = Trig_Pin_5;
-    l_uc->Trig_Port = Trig_Port_5;
+    l_uc->Echo_Pin  = ECHO_PIN_5;
+    l_uc->Echo_Port = ECHO_PORT_5;
+    l_uc->Trig_Pin  = TRIG_PIN_5;
+    l_uc->Trig_Port = TRIG_PORT_5;
     Base_Init(l_uc);
 
     // 6
     l_uc++;
-    l_uc->Echo_Pin  = Echo_Pin_6;
-    l_uc->Echo_Port = Echo_Port_6;
-    l_uc->Trig_Pin  = Trig_Pin_6;
-    l_uc->Trig_Port = Trig_Port_6;
+    l_uc->Echo_Pin  = ECHO_PIN_6;
+    l_uc->Echo_Port = ECHO_PORT_6;
+    l_uc->Trig_Pin  = TRIG_PIN_6;
+    l_uc->Trig_Port = TRIG_PORT_6;
     Base_Init(l_uc);
 
     // 7
     l_uc++;
-    l_uc->Echo_Pin  = Echo_Pin_7;
-    l_uc->Echo_Port = Echo_Port_7;
-    l_uc->Trig_Pin  = Trig_Pin_7;
-    l_uc->Trig_Port = Trig_Port_7;
+    l_uc->Echo_Pin  = ECHO_PIN_7;
+    l_uc->Echo_Port = ECHO_PORT_7;
+    l_uc->Trig_Pin  = TRIG_PIN_7;
+    l_uc->Trig_Port = TRIG_PORT_7;
     Base_Init(l_uc);
 
     // 8
     l_uc++;
-    l_uc->Echo_Pin  = Echo_Pin_8;
-    l_uc->Echo_Port = Echo_Port_8;
-    l_uc->Trig_Pin  = Trig_Pin_8;
-    l_uc->Trig_Port = Trig_Port_8;
+    l_uc->Echo_Pin  = ECHO_PIN_8;
+    l_uc->Echo_Port = ECHO_PORT_8;
+    l_uc->Trig_Pin  = TRIG_PIN_8;
+    l_uc->Trig_Port = TRIG_PORT_8;
     Base_Init(l_uc);
 }
 
@@ -168,11 +168,11 @@ void Base_Init(HC_SR04 *l_uc)
 }
 
 /**
- * @brief about us delay at 72MHz
+ * @brief about us delay
  *
  * @param us
  */
-void delay_us(uint32_t us)
+void Delay_us(uint32_t us)
 {
     uint32_t delay = (HAL_RCC_GetHCLKFreq() / 4000000 * us);
     while (delay--) {

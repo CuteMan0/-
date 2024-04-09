@@ -109,7 +109,7 @@ I2C_StatusTypeDef I2C_Transmit(uint8_t Salve_Address, uint8_t *pDATA, uint8_t Le
     if (Address_Send) {
         I2C_WriteByte(Salve_Address & 0xFE);
         while (I2C_ReceiveAck()) {
-            return Error; // 从机未响应
+            return I2C_ERROR; // 从机未响应
         }
         Address_Send -= 1;
     }
@@ -117,12 +117,12 @@ I2C_StatusTypeDef I2C_Transmit(uint8_t Salve_Address, uint8_t *pDATA, uint8_t Le
     for (uint8_t i = 0; i < Length; i++) {
         I2C_WriteByte(pDATA[i]);
         while (I2C_ReceiveAck()) {
-            return Error; // 从机未响应
+            return I2C_ERROR; // 从机未响应
         }
     }
 
     I2C_Stop();
-    return Ok;
+    return I2C_OK;
 }
 
 /**
@@ -141,7 +141,7 @@ I2C_StatusTypeDef I2C_Receive(uint8_t Salve_Address, uint8_t *pDATA, uint8_t Len
     if (Address_Send) {
         I2C_WriteByte(Salve_Address | 0x01);
         while (I2C_ReceiveAck()) {
-            return Error; // 从机未响应
+            return I2C_ERROR; // 从机未响应
         }
         Address_Send -= 1;
     }
@@ -155,7 +155,7 @@ I2C_StatusTypeDef I2C_Receive(uint8_t Salve_Address, uint8_t *pDATA, uint8_t Len
 
     I2C_Stop();
 
-    return Ok;
+    return I2C_OK;
 }
 
 /**
