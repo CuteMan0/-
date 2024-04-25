@@ -1,43 +1,100 @@
 #include "HC_SR04.h"
 
 /**
- * @brief 将测量数据上传主机
+ * @brief 响应主机
  *
- * @param l_uc 传入的是 帧头 的地址
  */
-void Ultrasonic_Upload(HC_SR04 *l_uc)
+void Ultrasonic_ACK(void)
 {
-    uint16_t buffer[10] = {0x00};
-    for (uint8_t i = 0; i < 8; i++) {
-        buffer[i] = l_uc->data;
-        l_uc++;
-    }
-
-    HAL_UART_Transmit(&huart1, buffer, 16, 100);
+    uint8_t Ack_Byte = ACK_M;
+    HAL_UART_Transmit(&huart1, &Ack_Byte, 1, 100);
 }
 
 /**
- * @brief 批量测距,建议连续测量间隔在60ms以上
+ * @brief 将测量数据上传主机
  *
- * @param l_uc 传入的是第一个超声波的地址
+ * @param l_uc 超声波的句柄
  */
-void Multi_Measure(HC_SR04 *l_uc)
+void Ultrasonic_Upload(HC_SR04 *l_uc)
 {
-    for (uint8_t i = 0; i < 8; i++) {
-        Measure_lenth(l_uc++);
+    uint8_t buffer[DEVICES + 2] = {0x00};
+    buffer[0]                   = HEAD;
+    buffer[DEVICES + 1]         = TAIL;
+    for (uint8_t i = 1; i < (DEVICES + 1); i++) {
+        l_uc++;
+        buffer[i] = (uint8_t)l_uc->data;
     }
-    WAIT_FOR_NEXT(FPS40);
+    HAL_UART_Transmit(&huart1, buffer, DEVICES + 2, 100);
+}
+
+/**
+ * @brief 接收主机命令
+ *
+ * @return DataStatusType 状态
+ */
+DataStatusType Ultrasonic_Download(void)
+{
+    uint8_t temp = 0x00;
+    HAL_UART_Receive(&huart1, &temp, 1, 100);
+
+    if (temp == START_M)
+        return DAT_OK;
+    else
+        return DAT_ERROR;
+}
+
+/**
+ * @brief 单/多端测距
+ *
+ * @param l_uc 超声波的句柄
+ * @return DataStatusType 状态
+ */
+DataStatusType Multi_Measure(HC_SR04 *l_uc)
+{
+    uint8_t cmd = 0x00;
+    HAL_UART_Receive(&huart1, &cmd, 1, 100);
+    // if (HAL_UART_Receive(&huart1, &cmd, 1, 100))
+    // {
+    switch (cmd) {
+        case UC1:
+            Measure_lenth(l_uc + (cmd & 0x0F));
+            return DAT_OK;
+        case UC2:
+            Measure_lenth(l_uc + (cmd & 0x0F));
+            return DAT_OK;
+        case UC3:
+            Measure_lenth(l_uc + (cmd & 0x0F));
+            return DAT_OK;
+        case UC4:
+            Measure_lenth(l_uc + (cmd & 0x0F));
+            return DAT_OK;
+        case UC5:
+            Measure_lenth(l_uc + (cmd & 0x0F));
+            return DAT_OK;
+        case UC6:
+            Measure_lenth(l_uc + (cmd & 0x0F));
+            return DAT_OK;
+        case UC_ALL:
+            for (uint8_t i = 1; i < (DEVICES + 1); i++) {
+                Measure_lenth(l_uc + i);
+            }
+            return DAT_OK;
+        default:
+            return DAT_ERROR;
+    }
+    // }
 }
 
 /**
  * @brief 测距
  *
- * @param l_uc 传入实体超声波的指针
+ * @param l_uc 数据包指针
  */
 void Measure_lenth(HC_SR04 *l_uc)
 {
     uint16_t startTime = 0, endTime = 0;
 
+#ifdef __time_cnt__
     // start measure
     HAL_GPIO_WritePin(l_uc->Trig_Port, l_uc->Trig_Pin, 1);
     Delay_us(10);
@@ -59,8 +116,15 @@ void Measure_lenth(HC_SR04 *l_uc)
 
     // time of back
     uint16_t backTime = endTime - startTime;
+
     // mm of distance
-    float distance = backTime * 0.17;
+    float distance = backTime * 0.017;
+    
+#endif // __time_cnt__
+
+#ifdef __inp_capture__
+
+#endif // __inp_capture__
 
     // 测量值存入data
     l_uc->data = (uint16_t)distance;
@@ -69,7 +133,7 @@ void Measure_lenth(HC_SR04 *l_uc)
 
 /**
  * @brief HC_SR-04 TRIG and ECHO pin to gpio
- * @param l_uc 传入的是第一个超声波的地址
+ * @param l_uc 超声波的句柄
  */
 void HC_SR_Init(HC_SR04 *l_uc)
 {
@@ -79,13 +143,14 @@ void HC_SR_Init(HC_SR04 *l_uc)
     __HAL_RCC_GPIOC_CLK_ENABLE();
 
     // 对第一个超声波进行初始化
+    l_uc++;
     l_uc->Echo_Pin  = ECHO_PIN_1;
     l_uc->Echo_Port = ECHO_PORT_1;
     l_uc->Trig_Pin  = TRIG_PIN_1;
     l_uc->Trig_Port = TRIG_PORT_1;
     Base_Init(l_uc);
 
-    // 更新地址，初始化第二个超声波
+    // 2
     l_uc++;
     l_uc->Echo_Pin  = ECHO_PIN_2;
     l_uc->Echo_Port = ECHO_PORT_2;
@@ -144,7 +209,7 @@ void HC_SR_Init(HC_SR04 *l_uc)
 
 /**
  * @brief 对超声波引脚进行初始化
- * @param l_uc 传入实体超声波的指针
+ * @param l_uc 数据包指针
  */
 void Base_Init(HC_SR04 *l_uc)
 {
@@ -168,7 +233,7 @@ void Base_Init(HC_SR04 *l_uc)
 }
 
 /**
- * @brief about us delay
+ * @brief 微秒级延时
  *
  * @param us
  */

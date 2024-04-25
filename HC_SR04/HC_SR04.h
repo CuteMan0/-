@@ -1,6 +1,9 @@
 #ifndef __HR_SR04_H
 #define __HR_SR04_H
 
+
+#define __time_cnt__
+
 #include "tim.h"
 #include "usart.h"
 
@@ -14,15 +17,28 @@ typedef struct
     uint16_t data;
 } HC_SR04;
 
-enum Time {
-    FPS40 = 25, // 4m
-    FPS20 = 50, // 7m
-    FPS16 = 60
-};
+typedef enum {
+    DAT_ERROR = 0,
+    DAT_OK
+} DataStatusType;
+
+#define DEVICES 6
+#define UC_ALL  0xAF
+#define UC1     0xA1
+#define UC2     0xA2
+#define UC3     0xA3
+#define UC4     0xA4
+#define UC5     0xA5
+#define UC6     0xA6
+
+#define HEAD    0xAA
+#define TAIL    0xFF
+// CMD List
+#define START_M 0xC3
+#define ACK_M   0x11
 
 // PIN Define
-#define ECHO_OK 		 HAL_GPIO_ReadPin(l_uc->Echo_Port, l_uc->Echo_Pin)
-#define WAIT_FOR_NEXT(x) HAL_Delay(x)
+#define ECHO_OK HAL_GPIO_ReadPin(l_uc->Echo_Port, l_uc->Echo_Pin)
 // U1 Set
 #define ECHO_PIN_1  GPIO_PIN_6
 #define ECHO_PORT_1 GPIOA
@@ -72,9 +88,11 @@ enum Time {
 #define TRIG_PORT_8 GPIOA
 
 // Function Declaration
+void Ultrasonic_ACK(void);
 void Ultrasonic_Upload(HC_SR04 *l_uc);
+DataStatusType Ultrasonic_Download(void);
 
-void Multi_Measure(HC_SR04 *l_uc);
+DataStatusType Multi_Measure(HC_SR04 *l_uc);
 void Measure_lenth(HC_SR04 *l_uc);
 
 void HC_SR_Init(HC_SR04 *l_uc);

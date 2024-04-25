@@ -165,8 +165,10 @@ I2C_StatusTypeDef I2C_Receive(uint8_t Salve_Address, uint8_t *pDATA, uint8_t Len
  */
 void I2C_SW_Init(void)
 {
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+    // __HAL_RCC_GPIOB_CLK_ENABLE();
+	// __HAL_RCC_GPIOC_CLK_ENABLE();
+	
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     GPIO_InitStruct.Pin              = SCL_PIN | SDA_PIN;
     GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_MEDIUM;

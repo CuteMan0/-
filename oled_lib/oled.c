@@ -10,7 +10,7 @@ void OLED_CMD(uint8_t CMD)
 {
     I2C_Start();
  
-    I2C_WriteByte(0x78);
+    I2C_WriteByte(SALVE_ADDRESS);
     I2C_ReceiveAck();
  
     I2C_WriteByte(0x80);
@@ -31,7 +31,7 @@ void OLED_DATA(uint8_t DATA)
 {
     I2C_Start();
  
-    I2C_WriteByte(0x78);
+    I2C_WriteByte(SALVE_ADDRESS);
     I2C_ReceiveAck();
  
     I2C_WriteByte(0xC0);

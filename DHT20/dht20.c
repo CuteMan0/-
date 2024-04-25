@@ -1,5 +1,10 @@
 #include "dht20.h"
-	
+
+/**
+ * @brief dht20ä¼ æ„Ÿå™¨è¯»å–
+ * 
+ * @param pdht20 ä¼ å…¥ä¼ æ„Ÿå™¨å¥æŸ„
+ */
 void dht20_run(float *pdht20)
 {
 	uint8_t pt_DAT[] = {0xAC,0x33,0x00};
@@ -8,33 +13,31 @@ void dht20_run(float *pdht20)
 	
 	if(init)
 	{
-		HAL_Delay(100);//ÉÏµç100msµÈ´ı
+		HAL_Delay(100);//ä¸Šç”µ100msç­‰å¾…
 		init -= 1;
 	}
-	HAL_I2C_Master_Receive(&hi2c2,0x71,pr_DAT,1,100);//¶Á×´Ì¬×Ö
-	// I2C_Receive(0x71,pr_DAT,1);//¶Á×´Ì¬×Ö
+	HAL_I2C_Master_Receive(&hi2c2,0x71,pr_DAT,1,100);//è¯»çŠ¶æ€å­—
+	// I2C_Receive(0x71,pr_DAT,1);//è¯»çŠ¶æ€å­—
 		
 	if( (pr_DAT[0] & 0x10) && (pr_DAT[0] &0x08) )
 	{
 		HAL_Delay(10);
-		HAL_I2C_Master_Transmit(&hi2c2,0x71,pt_DAT,3,100);//´¥·¢²âÁ¿
-		// I2C_Transmit(0x71,pt_DAT,3);//´¥·¢²âÁ¿
+		HAL_I2C_Master_Transmit(&hi2c2,0x71,pt_DAT,3,100);//è§¦å‘æµ‹é‡
+		// I2C_Transmit(0x71,pt_DAT,3);//è§¦å‘æµ‹é‡
 	}
 	else
 	{
-		//³õÊ¼»¯1B\1C\1E¼Ä´æÆ÷
+		//åˆå§‹åŒ–1B\1C\1Eå¯„å­˜å™¨
 	}
-	HAL_Delay(80);//µÈ´ı×ª»»
+	HAL_Delay(80);//ç­‰å¾…è½¬æ¢
 
-	HAL_I2C_Master_Receive(&hi2c2,0x71,pr_DAT,7,100);//½ÓÊÜÊı¾İ
-	// I2C_Receive(0x71,pr_DAT,7);//½ÓÊÜÊı¾İ
+	HAL_I2C_Master_Receive(&hi2c2,0x71,pr_DAT,7,100);//æ¥å—æ•°æ®
+	// I2C_Receive(0x71,pr_DAT,7);//æ¥å—æ•°æ®
 	while( pr_DAT[0]&0x80 )
 	{
-		;//ÕıÃ¦
+		;//æ­£å¿™
 	}
 	
 	pdht20[0] = (((pr_DAT[1]<<12) + (pr_DAT[2]<<4) + (pr_DAT[3]>>4))*100.0) / 0xfffff;
 	pdht20[1] = ((((pr_DAT[3]<<28)>>12) + (pr_DAT[4]<<8) + (pr_DAT[5]))*200.0) / 0xfffff - 50;
 }
-
-

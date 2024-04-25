@@ -2,7 +2,11 @@
 #define __OLED_H
 
 #include "i2c_sw.h"
-#include "i2c_hw.h"
+
+#define ID_LENGTH   4
+#define DATA_LENGTH 4
+
+#define SALVE_ADDRESS 0x78 //0x78 0x7A
 
 void OLED_Init(void);
 void OLED_Clear(void);
