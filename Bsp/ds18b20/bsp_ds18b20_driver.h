@@ -4,21 +4,21 @@
 
 typedef struct
 {
-    void (*init)(void);
-    bool (*reset)(uint16_t, uint16_t, uint16_t);
-    void (*writebyte)(uint8_t);
-    uint8_t (*readbyte)(void);
+    void (*pfinit)(void);
+    bool (*pfreset)(uint16_t, uint16_t, uint16_t);
+    void (*pfwritebyte)(uint8_t);
+    uint8_t (*pfreadbyte)(void);
 } ow_driver_interface_t;
 
 typedef struct bsp_ds18b20_t {
-    ow_driver_interface_t *psow_dirve_if;
+    ow_driver_interface_t *psonewire_dirve_if;
 
     float temperature;
 
     void (*pfinit)(struct bsp_ds18b20_t *);
     int8_t (*pfreadtemp)(struct bsp_ds18b20_t *);
 
-} bsp_ds18b20_handle_t;
+} bsp_ds18b20_t;
 
 /*                                    接口声明                                    */
 
@@ -36,13 +36,13 @@ typedef struct bsp_ds18b20_t {
  *         -1 1-Wire接口异常
  *         -2 实例化失败
  */
-int8_t BSP_DS18B20_Inst(const bsp_ds18b20_handle_t *psds18b20_handle,
+int8_t BSP_DS18B20_Inst(const bsp_ds18b20_t *psds18b20_handle,
                         void (*pfow_init)(void),
                         bool (*pfow_reset)(uint16_t, uint16_t, uint16_t),
                         void (*pfow_writebyte)(uint8_t),
                         uint8_t (*pfow_readbyte)(void),
-                        void (*pfds18b20_init)(bsp_ds18b20_handle_t *),
-                        int8_t (*pfds18b20_readtemp)(bsp_ds18b20_handle_t *));
+                        void (*pfds18b20_init)(bsp_ds18b20_t *),
+                        int8_t (*pfds18b20_readtemp)(bsp_ds18b20_t *));
 
 /*
  * DS18B20初始化
@@ -50,7 +50,7 @@ int8_t BSP_DS18B20_Inst(const bsp_ds18b20_handle_t *psds18b20_handle,
  * @param  psd18b20_handle: DS18B20句柄
  * @retval void
  */
-void BSP_DS18B20_Init(bsp_ds18b20_handle_t *psds18b20_handle);
+void BSP_DS18B20_Init(bsp_ds18b20_t *psds18b20_handle);
 
 /*
  * DS18B20读取温度
@@ -59,4 +59,4 @@ void BSP_DS18B20_Init(bsp_ds18b20_handle_t *psds18b20_handle);
  * @retval 0 读取成功
  *         -1 从机未响应
  */
-int8_t BSP_DS18B20_ReadTemperature(bsp_ds18b20_handle_t *psds18b20_handle);
+int8_t BSP_DS18B20_ReadTemperature(bsp_ds18b20_t *psds18b20_handle);
