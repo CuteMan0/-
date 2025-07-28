@@ -39,12 +39,12 @@ void BSP_Beep_Disable(bsp_beep_t *psbeep_handle)
 int8_t BSP_Beep_Instance(const bsp_beep_t *psbeep_handle,
                          void (*pfset_pin)(bool level),
                          void (*pfdelay_ms)(uint16_t ms),
-                         void (*pfbeep_init)(bsp_beep_t *psbeep_handle),
+                         void (*pfbeep_init)(bsp_beep_t *psbeep_handle, uint8_t duty, uint8_t freq),
                          void (*pfbeep_enable)(bsp_beep_t *psbeep_handle),
                          void (*pfbeep_disable)(bsp_beep_t *psbeep_handle))
 {
     if (NULL == psbeep_handle) {
-        return;
+        return -1;
     }
     bsp_beep_t *pstmp                 = psbeep_handle;
     static bsp_beep_io_driver_t io_if = {NULL, NULL};
@@ -54,7 +54,7 @@ int8_t BSP_Beep_Instance(const bsp_beep_t *psbeep_handle,
 
     if (NULL == io_if.set_pin ||
         NULL == io_if.delay_ms) {
-        return -1;
+        return -2;
     }
 
     pstmp->psio_if   = &io_if;
@@ -66,7 +66,7 @@ int8_t BSP_Beep_Instance(const bsp_beep_t *psbeep_handle,
         NULL == pstmp->pfinit ||
         NULL == pstmp->pfenable ||
         NULL == pstmp->pfdisable) {
-        return -2;
+        return -3;
     }
 
     return 0;

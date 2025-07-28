@@ -1,6 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
-// #include <stddef.h>
+#include <stddef.h>
 
 typedef struct
 {
@@ -13,7 +13,7 @@ typedef struct bsp_beep_t {
     uint8_t duty; // 0~100
     uint8_t freq; // 0~5Hz
 
-    void (*pfinit)(struct bsp_beep_t *psbeep_handle);
+    void (*pfinit)(struct bsp_beep_t *psbeep_handle, uint8_t duty, uint8_t freq);
     void (*pfenable)(struct bsp_beep_t *psbeep_handle);
     void (*pfdisable)(struct bsp_beep_t *psbeep_handle);
 } bsp_beep_t;
@@ -30,13 +30,14 @@ typedef struct bsp_beep_t {
  * @param  pfbeep_enable: Beep 使能函数
  * @param  pfbeep_disable: Beep 禁用函数
  * @retval 0 实例化成功
- *         -1 IO接口异常
- *         -2 实例化失败
+ *         -1 句柄异常
+ *         -2 IO接口异常
+ *         -3 实例化失败
  */
 int8_t BSP_Beep_Instance(const bsp_beep_t *psbeep_handle,
                          void (*pfset_pin)(bool level),
                          void (*pfdelay_ms)(uint16_t ms),
-                         void (*pfbeep_init)(bsp_beep_t *psbeep_handle),
+                         void (*pfbeep_init)(bsp_beep_t *psbeep_handle, uint8_t duty, uint8_t freq),
                          void (*pfbeep_enable)(bsp_beep_t *psbeep_handle),
                          void (*pfbeep_disable)(bsp_beep_t *psbeep_handle));
 
