@@ -1,3 +1,6 @@
+#ifndef __BSP_BEEP_DRIVER_H
+#define __BSP_BEEP_DRIVER_H
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -13,9 +16,9 @@ typedef struct bsp_beep_t {
     uint8_t duty; // 0~100
     uint8_t freq; // 0~5Hz
 
-    void (*pfinit)(struct bsp_beep_t *psbeep_handle, uint8_t duty, uint8_t freq);
-    void (*pfenable)(struct bsp_beep_t *psbeep_handle);
-    void (*pfdisable)(struct bsp_beep_t *psbeep_handle);
+    void (*pfinit)(struct bsp_beep_t *self, uint8_t duty, uint8_t freq);
+    void (*pfenable)(struct bsp_beep_t *self);
+    void (*pfdisable)(struct bsp_beep_t *self);
 } bsp_beep_t;
 
 #define LOGIC 1 // 1 : high active, 0: low active
@@ -34,12 +37,12 @@ typedef struct bsp_beep_t {
  *         -2 IO接口异常
  *         -3 实例化失败
  */
-int8_t BSP_Beep_Instance(const bsp_beep_t *psbeep_handle,
-                         void (*pfset_pin)(bool level),
-                         void (*pfdelay_ms)(uint16_t ms),
-                         void (*pfbeep_init)(bsp_beep_t *psbeep_handle, uint8_t duty, uint8_t freq),
-                         void (*pfbeep_enable)(bsp_beep_t *psbeep_handle),
-                         void (*pfbeep_disable)(bsp_beep_t *psbeep_handle));
+int8_t BSP_Beep_Instance(const bsp_beep_t *pbeep,
+                         void (*pfset_pin)(bool),
+                         void (*pfdelay_ms)(uint16_t),
+                         void (*pfbeep_init)(bsp_beep_t *, uint8_t, uint8_t),
+                         void (*pfbeep_enable)(bsp_beep_t *),
+                         void (*pfbeep_disable)(bsp_beep_t *));
 
 /*
  * @brief  Beep 初始化
@@ -47,16 +50,18 @@ int8_t BSP_Beep_Instance(const bsp_beep_t *psbeep_handle,
  * @param  duty: 占空比
  * @retval None
  */
-void BSP_Beep_Init(bsp_beep_t *psbeep_handle, uint8_t duty, uint8_t freq);
+void BSP_Beep_Init(bsp_beep_t *pbeep, uint8_t duty, uint8_t freq);
 /*
  * @brief  Beep 使能
  * @param  psbeep_handle: Beep句柄
  * @retval None
  */
-void BSP_Beep_Enable(bsp_beep_t *psbeep_handle);
+void BSP_Beep_Enable(bsp_beep_t *pbeep);
 /*
  * @brief  Beep 禁用
  * @param  psbeep_handle: Beep句柄
  * @retval None
  */
-void BSP_Beep_Disable(bsp_beep_t *psbeep_handle);
+void BSP_Beep_Disable(bsp_beep_t *pbeep);
+
+#endif /* __BSP_BEEP_DRIVER_H */

@@ -2,23 +2,23 @@
 
 uint8_t tick = 0;
 
-void BSP_Beep_Init(bsp_beep_t *psbeep_handle, uint8_t duty, uint8_t freq)
+void BSP_Beep_Init(bsp_beep_t *pbeep, uint8_t duty, uint8_t freq)
 {
-    psbeep_handle->psio_if->set_pin(!LOGIC);
-    psbeep_handle->duty = duty;
-    psbeep_handle->freq = freq;
+    pbeep->psio_if->set_pin(!LOGIC);
+    pbeep->duty = duty;
+    pbeep->freq = freq;
 }
 
-void BSP_Beep_Enable(bsp_beep_t *psbeep_handle)
+void BSP_Beep_Enable(bsp_beep_t *pbeep)
 {
-    const uint16_t period_ticks = 1000 / psbeep_handle->freq;
-    const uint8_t active_ticks  = (psbeep_handle->duty * period_ticks) / 100;
+    const uint16_t period_ticks = 1000 / pbeep->freq;
+    const uint8_t active_ticks  = (pbeep->duty * period_ticks) / 100;
 
     bool pin_state = (tick < active_ticks) ? LOGIC : !LOGIC;
-    psbeep_handle->psio_if->set_pin(pin_state);
+    pbeep->psio_if->set_pin(pin_state);
 
     if (tick < period_ticks) {
-        psbeep_handle->psio_if->delay_ms(1);
+        pbeep->psio_if->delay_ms(1);
         tick++;
     } else {
         tick = 0;
@@ -27,26 +27,26 @@ void BSP_Beep_Enable(bsp_beep_t *psbeep_handle)
 
 /*
  * @brief  Beep ½ûÓÃ
- * @param  psbeep_handle: Beep¾ä±ú
+ * @param  pbeep: Beep¾ä±ú
  * @retval None
  */
-void BSP_Beep_Disable(bsp_beep_t *psbeep_handle)
+void BSP_Beep_Disable(bsp_beep_t *pbeep)
 {
-    psbeep_handle->psio_if->set_pin(!LOGIC);
+    pbeep->psio_if->set_pin(!LOGIC);
     tick = 0;
 }
 
-int8_t BSP_Beep_Instance(const bsp_beep_t *psbeep_handle,
-                         void (*pfset_pin)(bool level),
-                         void (*pfdelay_ms)(uint16_t ms),
-                         void (*pfbeep_init)(bsp_beep_t *psbeep_handle, uint8_t duty, uint8_t freq),
-                         void (*pfbeep_enable)(bsp_beep_t *psbeep_handle),
-                         void (*pfbeep_disable)(bsp_beep_t *psbeep_handle))
+int8_t BSP_Beep_Instance(const bsp_beep_t *pbeep,
+                         void (*pfset_pin)(bool),
+                         void (*pfdelay_ms)(uint16_t),
+                         void (*pfbeep_init)(bsp_beep_t *, uint8_t, uint8_t),
+                         void (*pfbeep_enable)(bsp_beep_t *),
+                         void (*pfbeep_disable)(bsp_beep_t *))
 {
-    if (NULL == psbeep_handle) {
+    if (NULL == pbeep) {
         return -1;
     }
-    bsp_beep_t *pstmp                 = psbeep_handle;
+    bsp_beep_t *pstmp                 = pbeep;
     static bsp_beep_io_driver_t io_if = {NULL, NULL};
 
     io_if.set_pin  = pfset_pin;

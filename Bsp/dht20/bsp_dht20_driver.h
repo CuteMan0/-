@@ -30,8 +30,8 @@ typedef struct bsp_dht20_t {
     float temperature;
     uint8_t crc_val;
 
-    dht20_status_t (*pfinit)(struct bsp_dht20_t *);
-    dht20_status_t (*pfupdate)(struct bsp_dht20_t *);
+    dht20_status_t (*pfinit)(struct bsp_dht20_t *self);
+    dht20_status_t (*pfupdate)(struct bsp_dht20_t *self);
 } bsp_dht20_handle_t;
 
 /*                                    接口声明                                    */
@@ -39,7 +39,7 @@ typedef struct bsp_dht20_t {
 /*
  *
  * @brief  DHT20实例化
- * @param  psdht20_handle: DHT20句柄
+ * @param  pdht20: DHT20句柄
  * @param  pfdelay_ms: ms级延时函数
  * @param  pfiic_init: iic 初始化函数
  * @param  pfiic_write: iic 写函数
@@ -51,7 +51,7 @@ typedef struct bsp_dht20_t {
  *         -2 iic接口异常
  *         -3 实例化失败
  */
-dht20_status_t BSP_DHT20_Inst(const bsp_dht20_handle_t *psdht20_handle,
+dht20_status_t BSP_DHT20_Inst(const bsp_dht20_handle_t *pdht20,
                               void (*pfdelay_ms)(uint16_t),
                               int8_t (*pfiic_init)(void),
                               int8_t (*pfiic_write)(uint8_t, uint8_t, uint8_t *, uint8_t),
@@ -62,17 +62,17 @@ dht20_status_t BSP_DHT20_Inst(const bsp_dht20_handle_t *psdht20_handle,
 /*
  * DHT20初始化
  * @brief 初始化DHT20的iic接口，并复位温湿度数据
- * @param  psdht20_handle: DHT20句柄
+ * @param  pdht20: DHT20句柄
  * @retval void
  */
-dht20_status_t BSP_DHT20_Init(bsp_dht20_handle_t *psdht20_handle);
+dht20_status_t BSP_DHT20_Init(bsp_dht20_handle_t *pdht20);
 
 /*
  * DHT20读取温度
  * @brief 向DHT20申请温湿度度读取并转换数值
- * @param  psdht20_handle: DHT20句柄
+ * @param  pdht20: DHT20句柄
  * @retval 0 读取成功
  */
-dht20_status_t BSP_DHT20_Update(bsp_dht20_handle_t *psdht20_handle);
+dht20_status_t BSP_DHT20_Update(bsp_dht20_handle_t *pdht20);
 
-#endif // __BSP_DHT20_DRIVER_H
+#endif /* __BSP_DHT20_DRIVER_H */

@@ -18,9 +18,9 @@ typedef struct
 {
     int8_t (*init)(void);
     int8_t (*deinit)(void);
-    int8_t (*write)(uint8_t, uint8_t *, uint8_t);
-    int8_t (*read)(uint8_t, uint8_t *, uint8_t);
-    void (*delay_ms)(uint32_t);
+    int8_t (*write)(uint8_t addr, uint8_t *dat, uint8_t len);
+    int8_t (*read)(uint8_t addr, uint8_t *dat, uint8_t len);
+    void (*delay_ms)(uint32_t ms);
 } iic_driver_interface_t;
 
 typedef struct bsp_hdc1080_t {
@@ -29,8 +29,8 @@ typedef struct bsp_hdc1080_t {
     float humidity;
     float temperature;
 
-    hdc1080_status_t (*pfinit)(struct bsp_hdc1080_t *);
-    hdc1080_status_t (*pfupdate)(struct bsp_hdc1080_t *);
+    hdc1080_status_t (*pfinit)(struct bsp_hdc1080_t *self);
+    hdc1080_status_t (*pfupdate)(struct bsp_hdc1080_t *self);
 } bsp_hdc1080_t;
 
 /*                                    接口声明                                    */
@@ -38,7 +38,7 @@ typedef struct bsp_hdc1080_t {
 /*
  *
  * @brief  HDC1080实例化
- * @param  pshdc1080_handle: HDC1080句柄
+ * @param  phdc1080: HDC1080句柄
  * @param  pfiic_init: iic 初始化函数
  * @param  pfiic_deinit: iic 解初始化函数
  * @param  pfiic_write: iic 写函数
@@ -46,11 +46,11 @@ typedef struct bsp_hdc1080_t {
  * @param  pfhdc1080_init: HDC1080 初始化函数
  * @param  pfhdc1080_update: HDC1080 更新温湿度数据函数
  * @retval 0 实例化成功
- *         -1 HDC1080句柄异常
+ *         -1 delay接口异常
  *         -2 iic接口异常
  *         -3 实例化失败
  */
-hdc1080_status_t BSP_HDC1080_Inst(const bsp_hdc1080_t *pshdc1080_handle,
+hdc1080_status_t BSP_HDC1080_Inst(const bsp_hdc1080_t *phdc1080,
                                   void (*pfdelay_ms)(uint32_t),
                                   int8_t (*pfiic_init)(void),
                                   int8_t (*pfiic_deinit)(void),
@@ -62,17 +62,17 @@ hdc1080_status_t BSP_HDC1080_Inst(const bsp_hdc1080_t *pshdc1080_handle,
 /*
  * HDC1080初始化
  * @brief 初始化HDC1080的iic接口，并复位温湿度数据
- * @param  pshdc1080_handle: HDC1080句柄
+ * @param  phdc1080: HDC1080句柄
  * @retval void
  */
-hdc1080_status_t BSP_HDC1080_Init(bsp_hdc1080_t *pshdc1080_handle);
+hdc1080_status_t BSP_HDC1080_Init(bsp_hdc1080_t *phdc1080);
 
 /*
  * HDC1080读取温度
  * @brief 向HDC1080申请温湿度度读取并转换数值
- * @param  pshdc1080_handle: HDC1080句柄
+ * @param  phdc1080: HDC1080句柄
  * @retval 0 读取成功
  */
-hdc1080_status_t BSP_HDC1080_Update(bsp_hdc1080_t *pshdc1080_handle);
+hdc1080_status_t BSP_HDC1080_Update(bsp_hdc1080_t *phdc1080);
 
-#endif /* __BSP_HDCXX_DRIVER_H__ */
+#endif /* __BSP_HDCXX_DRIVER_H */

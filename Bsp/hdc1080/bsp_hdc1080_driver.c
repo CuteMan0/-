@@ -16,7 +16,7 @@
 #define HDC1080_CONFIG_TRES         0x0400
 #define HDC1080_CONFIG_HRES         0x0200
 
-hdc1080_status_t BSP_HDC1080_Inst(const bsp_hdc1080_t *pshdc1080_handle,
+hdc1080_status_t BSP_HDC1080_Inst(const bsp_hdc1080_t *phdc1080,
                                   void (*pfdelay_ms)(uint32_t),
                                   int8_t (*pfiic_init)(void),
                                   int8_t (*pfiic_deinit)(void),
@@ -25,11 +25,11 @@ hdc1080_status_t BSP_HDC1080_Inst(const bsp_hdc1080_t *pshdc1080_handle,
                                   hdc1080_status_t (*pfhdc1080_init)(bsp_hdc1080_t *),
                                   hdc1080_status_t (*pfhdc1080_update)(bsp_hdc1080_t *))
 {
-    if (NULL == pshdc1080_handle) {
+    if (NULL == phdc1080) {
         return HDC1080_ERROR_HANDLE;
     }
 
-    bsp_hdc1080_t *pstmp                   = pshdc1080_handle;
+    bsp_hdc1080_t *pstmp                   = phdc1080;
     static iic_driver_interface_t iic_d_if = {NULL, NULL, NULL, NULL, NULL};
 
     iic_d_if.init     = pfiic_init;
@@ -58,29 +58,29 @@ hdc1080_status_t BSP_HDC1080_Inst(const bsp_hdc1080_t *pshdc1080_handle,
     return HDC1080_SUCCESS;
 }
 
-hdc1080_status_t BSP_HDC1080_Init(bsp_hdc1080_t *pshdc1080_handle)
+hdc1080_status_t BSP_HDC1080_Init(bsp_hdc1080_t *phdc1080)
 {
-    pshdc1080_handle->temperature = 0.0f;
-    pshdc1080_handle->humidity    = 0.0f;
+    phdc1080->temperature = 0.0f;
+    phdc1080->humidity    = 0.0f;
 
-    if (0 != pshdc1080_handle->psiic_driver_if->init()) {
+    if (0 != phdc1080->psiic_driver_if->init()) {
         return HDC1080_ERROR_IIC_INIT;
     }
 
     return HDC1080_SUCCESS;
 }
 
-hdc1080_status_t BSP_HDC1080_Update(bsp_hdc1080_t *pshdc1080_handle)
+hdc1080_status_t BSP_HDC1080_Update(bsp_hdc1080_t *phdc1080)
 {
     uint8_t cmd;
     uint8_t data[4];
 
-    if (NULL == pshdc1080_handle ||
-        NULL == pshdc1080_handle->psiic_driver_if) {
+    if (NULL == phdc1080 ||
+        NULL == phdc1080->psiic_driver_if) {
         // return HDC1080_ERROR_NULL_PTR;
     }
 
-    const iic_driver_interface_t *piic = pshdc1080_handle->psiic_driver_if;
+    const iic_driver_interface_t *piic = phdc1080->psiic_driver_if;
 
     // 触发测量温湿度
     cmd = HDC1080_REG_TEMP;
@@ -97,12 +97,12 @@ hdc1080_status_t BSP_HDC1080_Update(bsp_hdc1080_t *pshdc1080_handle)
     }
 
     // 解码温度
-    uint16_t raw_temp             = ((uint16_t)data[0] << 8) | data[1];
-    pshdc1080_handle->temperature = ((float)raw_temp / 65536.0f) * 165.0f - 40.0f;
+    uint16_t raw_temp     = ((uint16_t)data[0] << 8) | data[1];
+    phdc1080->temperature = ((float)raw_temp / 65536.0f) * 165.0f - 40.0f;
 
     // 解码湿度
-    uint16_t raw_humi          = ((uint16_t)data[2] << 8) | data[3];
-    pshdc1080_handle->humidity = ((float)raw_humi / 65536.0f) * 100.0f;
+    uint16_t raw_humi  = ((uint16_t)data[2] << 8) | data[3];
+    phdc1080->humidity = ((float)raw_humi / 65536.0f) * 100.0f;
 
     return HDC1080_SUCCESS;
 }

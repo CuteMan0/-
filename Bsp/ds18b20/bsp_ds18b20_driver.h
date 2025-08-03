@@ -5,8 +5,8 @@
 typedef struct
 {
     void (*pfinit)(void);
-    bool (*pfreset)(uint16_t, uint16_t, uint16_t);
-    void (*pfwritebyte)(uint8_t);
+    bool (*pfreset)(uint16_t RSTH_time, uint16_t PDLOW_time, uint16_t RSTL_time);
+    void (*pfwritebyte)(uint8_t byte);
     uint8_t (*pfreadbyte)(void);
 } ow_driver_interface_t;
 
@@ -15,8 +15,8 @@ typedef struct bsp_ds18b20_t {
 
     float temperature;
 
-    void (*pfinit)(struct bsp_ds18b20_t *);
-    int8_t (*pfreadtemp)(struct bsp_ds18b20_t *);
+    void (*pfinit)(struct bsp_ds18b20_t *self);
+    int8_t (*pfreadtemp)(struct bsp_ds18b20_t *self);
 
 } bsp_ds18b20_t;
 
@@ -36,7 +36,7 @@ typedef struct bsp_ds18b20_t {
  *         -1 1-Wire接口异常
  *         -2 实例化失败
  */
-int8_t BSP_DS18B20_Inst(const bsp_ds18b20_t *psds18b20_handle,
+int8_t BSP_DS18B20_Inst(const bsp_ds18b20_t *pds18b20,
                         void (*pfow_init)(void),
                         bool (*pfow_reset)(uint16_t, uint16_t, uint16_t),
                         void (*pfow_writebyte)(uint8_t),
@@ -50,7 +50,7 @@ int8_t BSP_DS18B20_Inst(const bsp_ds18b20_t *psds18b20_handle,
  * @param  psd18b20_handle: DS18B20句柄
  * @retval void
  */
-void BSP_DS18B20_Init(bsp_ds18b20_t *psds18b20_handle);
+void BSP_DS18B20_Init(bsp_ds18b20_t *pds18b20);
 
 /*
  * DS18B20读取温度
@@ -59,4 +59,4 @@ void BSP_DS18B20_Init(bsp_ds18b20_t *psds18b20_handle);
  * @retval 0 读取成功
  *         -1 从机未响应
  */
-int8_t BSP_DS18B20_ReadTemperature(bsp_ds18b20_t *psds18b20_handle);
+int8_t BSP_DS18B20_ReadTemperature(bsp_ds18b20_t *pds18b20);
