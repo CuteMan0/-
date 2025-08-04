@@ -38,7 +38,7 @@ extern "C"
      * @param ow: 句柄
      * @return true: 有设备应答，false: 无响应
      */
-    bool OW_Reset(ow_handle_t *ow);
+    bool OW_Reset(ow_handle_t *ow, uint16_t rstl_time, uint16_t pdih_time, uint16_t rsth_time);
 
     /**
      * @brief 写入一个字节（LSB First）

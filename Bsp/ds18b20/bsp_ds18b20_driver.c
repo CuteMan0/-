@@ -22,6 +22,9 @@ int8_t BSP_DS18B20_ReadTemperature(bsp_ds18b20_t *pds18b20)
     {
         return -1; // Reset failed
     }
+
+    pds18b20->psonewire_dirve_if->delay_ms(750);
+
     pds18b20->psonewire_dirve_if->pfwritebyte(0xCC); // Skip ROM command
     pds18b20->psonewire_dirve_if->pfwritebyte(0xBE); // Read scratchpad command
 
@@ -44,6 +47,7 @@ int8_t BSP_DS18B20_Inst(const bsp_ds18b20_t *pds18b20,
                         bool (*pfow_reset)(uint16_t, uint16_t, uint16_t),
                         void (*pfow_writebyte)(uint8_t),
                         uint8_t (*pfow_readbyte)(void),
+                        void (*pfow_delayms)(uint16_t),
                         void (*pfds18b20_init)(bsp_ds18b20_t *),
                         int8_t (*pfds18b20_readtemp)(bsp_ds18b20_t *))
 {
@@ -52,16 +56,18 @@ int8_t BSP_DS18B20_Inst(const bsp_ds18b20_t *pds18b20,
         return;
     }
     bsp_ds18b20_t *pstmp = pds18b20;
-    static ow_driver_interface_t ow_d_if = {NULL, NULL, NULL, NULL};
+    static ow_driver_interface_t ow_d_if = {NULL, NULL, NULL, NULL, NULL};
 
     ow_d_if.pfinit = pfow_init;
     ow_d_if.pfreset = pfow_reset;
     ow_d_if.pfwritebyte = pfow_writebyte;
     ow_d_if.pfreadbyte = pfow_readbyte;
+    ow_d_if.pfdelay_ms = pfow_delayms;
     if (NULL == ow_d_if.pfinit ||
         NULL == ow_d_if.pfreset ||
         NULL == ow_d_if.pfwritebyte ||
-        NULL == ow_d_if.pfreadbyte)
+        NULL == ow_d_if.pfreadbyte ||
+        NULL == ow_d_if.pfdelay_ms)
     {
         return -1;
     }

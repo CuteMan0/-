@@ -5,12 +5,15 @@
 typedef struct
 {
     void (*pfinit)(void);
-    bool (*pfreset)(uint16_t RSTH_time, uint16_t PDLOW_time, uint16_t RSTL_time);
+    bool (*pfreset)(uint16_t rstl_time, uint16_t pdih_time, uint16_t pdil_time, uint16_t rsth_time);
+    // rstl_time:复位低时长，pdih_time:存在检测高时间，pdil_time:存在检测低时间，rsth_time:复位高时长
     void (*pfwritebyte)(uint8_t byte);
     uint8_t (*pfreadbyte)(void);
+    void (*pfdelay_ms)(uint16_t us); // 毫秒延时函数
 } ow_driver_interface_t;
 
-typedef struct bsp_ds18b20_t {
+typedef struct bsp_ds18b20_t
+{
     ow_driver_interface_t *psonewire_dirve_if;
 
     float temperature;
@@ -30,6 +33,7 @@ typedef struct bsp_ds18b20_t {
  * @param  pfow_reset: 1-Wire总线复位函数
  * @param  pfow_writebyte: 1-Wire 写字节函数
  * @param  pfow_readbyte: 1-Wire 读字节函数
+ * @param  pfow_delayms: 1-Wire 延时函数
  * @param  pfds18b20_init: DS18B20 初始化函数
  * @param  pfds18b20_readtemp: DS18B20 读取温度函数
  * @retval 0 实例化成功
@@ -41,6 +45,7 @@ int8_t BSP_DS18B20_Inst(const bsp_ds18b20_t *pds18b20,
                         bool (*pfow_reset)(uint16_t, uint16_t, uint16_t),
                         void (*pfow_writebyte)(uint8_t),
                         uint8_t (*pfow_readbyte)(void),
+                        void (*pfow_delayms)(uint16_t),
                         void (*pfds18b20_init)(bsp_ds18b20_t *),
                         int8_t (*pfds18b20_readtemp)(bsp_ds18b20_t *));
 

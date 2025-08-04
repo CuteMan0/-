@@ -41,15 +41,15 @@ void OW_Init(ow_handle_t *ow)
     }
 }
 
-bool OW_Reset(ow_handle_t *ow)
+bool OW_Reset(ow_handle_t *ow, uint16_t rstl_time, uint16_t pdih_time, uint16_t pdil_time, uint16_t rsth_time)
 {
     ow->io_if.set_pin(0);
-    ow->io_if.delay_us(480); // 复位脉冲 ≥ 480us
+    ow->io_if.delay_us(rstl_time); // 复位脉冲 ≥ 480us
     ow->io_if.set_pin(1);
-    ow->io_if.delay_us(70); // 等待从机应答
+    ow->io_if.delay_us(pdih_time + pdil_time / 2); // 等待从机应答
 
     bool presence = !ow->io_if.get_pin(); // 从机拉低表示存在
-    ow->io_if.delay_us(410);              // 总周期结束
+    ow->io_if.delay_us(rsth_time);        // 总周期结束
 
     return presence;
 }
