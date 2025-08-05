@@ -5,28 +5,32 @@
 #include <stdint.h>
 #include <stddef.h>
 
-typedef enum {
-    LTC4054_SUCCESS        = 0,
-    LTC4054_ERROR_HANDLE   = -1,
-    LTC4054_ERROR_IO_INST  = -2,
+typedef enum
+{
+    LTC4054_SUCCESS = 0,
+    LTC4054_ERROR_HANDLE = -1,
+    LTC4054_ERROR_IO_INST = -2,
     LTC4054_ERROR_INSTANCE = -3
 } ltc4054_status_t;
 
-typedef enum {
+typedef enum
+{
     STATE_UNKNOWN,
     STATE_CHARGING,
     STATE_CHARGE_DONE,
     STATE_UVLO_OR_FLOAT
 } ltc4054_charge_state_t;
 
-typedef struct {
+typedef struct
+{
     void (*set_out_high)(void);    // OUT = 推挽高电平
     void (*set_out_z)(void);       // OUT = 高阻输入
     bool (*read_in)(void);         // 读取 CHRG 引脚（即 IN）
     void (*delay_ms)(uint16_t ms); // 延时
 } bsp_ltc4054_io_driver_t;
 
-typedef struct bsp_ltc4054_t {
+typedef struct bsp_ltc4054_t
+{
     bsp_ltc4054_io_driver_t *psio_if;
 
     ltc4054_charge_state_t state;
@@ -62,7 +66,7 @@ void BSP_LTC4054_Init(bsp_ltc4054_t *pltc4054);
 /**
  * @brief 获取 LTC4054 状态
  * @param pltc4054 LTC4054 句柄
- * /
+ */
 void BSP_LTC4054_Get_State(bsp_ltc4054_t *pltc4054);
 
 #endif /* __BSP_LTC4054_DRIVER_H */
