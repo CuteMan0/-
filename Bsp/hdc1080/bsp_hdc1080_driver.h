@@ -5,12 +5,13 @@
 #include "stdint.h"
 #include <stddef.h>
 
-typedef enum {
-    HDC1080_SUCCESS              = 0,
-    HDC1080_ERROR_HANDLE         = -1,
-    HDC1080_ERROR_IIC_INST       = -2,
-    HDC1080_ERROR_INSTANCE       = -3,
-    HDC1080_ERROR_IIC_INIT       = -4,
+typedef enum
+{
+    HDC1080_SUCCESS = 0,
+    HDC1080_ERROR_HANDLE = -1,
+    HDC1080_ERROR_IIC_INST = -2,
+    HDC1080_ERROR_INSTANCE = -3,
+    HDC1080_ERROR_IIC_INIT = -4,
     HDC1080_ERROR_INITIALIZATION = -5
 } hdc1080_status_t;
 
@@ -23,7 +24,8 @@ typedef struct
     void (*delay_ms)(uint32_t ms);
 } iic_driver_interface_t;
 
-typedef struct bsp_hdc1080_t {
+typedef struct bsp_hdc1080_t
+{
     iic_driver_interface_t *psiic_driver_if;
 
     float humidity;
@@ -45,10 +47,7 @@ typedef struct bsp_hdc1080_t {
  * @param  pfiic_read: iic 读函数
  * @param  pfhdc1080_init: HDC1080 初始化函数
  * @param  pfhdc1080_update: HDC1080 更新温湿度数据函数
- * @retval 0 实例化成功
- *         -1 delay接口异常
- *         -2 iic接口异常
- *         -3 实例化失败
+ * @retval 实例化状态
  */
 hdc1080_status_t BSP_HDC1080_Inst(const bsp_hdc1080_t *phdc1080,
                                   void (*pfdelay_ms)(uint32_t),
