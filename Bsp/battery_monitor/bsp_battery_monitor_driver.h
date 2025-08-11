@@ -17,7 +17,7 @@ typedef struct bsp_battery_monitor_t {
     /**
      * @brief 当前电池电量百分比，范围0~100
      */
-    float bat_level;
+    float state_of_charge;
 
     /**
      * @brief 初始化回调函数，由用户实现

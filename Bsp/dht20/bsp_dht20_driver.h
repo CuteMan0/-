@@ -7,7 +7,8 @@
 
 #define DEV_ADDRESS 0x38
 
-typedef enum {
+typedef enum
+{
     DHT20_SUCCESS = 0,
     DHT20_ERROR_IIC_INST,
     DHT20_ERROR_INSTANCE,
@@ -15,14 +16,16 @@ typedef enum {
     DHT20_ERROR_INITIALIZATION
 } dht20_status_t;
 
-typedef struct {
+typedef struct
+{
     int8_t (*init)(void);
     int8_t (*write)(uint8_t addr, uint8_t reg, uint8_t *data, uint8_t len);
     int8_t (*read)(uint8_t addr, uint8_t *data, uint8_t len);
     void (*delay_ms)(uint16_t ms);
 } iic_driver_interface_t;
 
-typedef struct bsp_dht20_t {
+typedef struct bsp_dht20_t
+{
     iic_driver_interface_t *psiic_driver_if;
 
     dht20_status_t status;

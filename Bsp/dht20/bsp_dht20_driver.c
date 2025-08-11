@@ -1,25 +1,28 @@
 #include "bsp_dht20_driver.h"
 
-uint8_t r_status  = 0;
-uint8_t pt_cmd[]  = {0x33, 0x00};
+uint8_t r_status = 0;
+uint8_t pt_cmd[] = {0x33, 0x00};
 uint8_t pr_dat[7] = {0x00};
 
 dht20_status_t BSP_DHT20_Init(bsp_dht20_handle_t *pdht20)
 {
     pdht20->temperature = 0.0f;
-    pdht20->humidity    = 0.0f;
+    pdht20->humidity = 0.0f;
 
-    if (0 != pdht20->psiic_driver_if->init()) {
+    if (0 != pdht20->psiic_driver_if->init())
+    {
         return DHT20_ERROR_IIC_INIT;
     }
 
     static bool init = 1;
-    if (init) {
+    if (init)
+    {
         init -= 1;
         pdht20->psiic_driver_if->delay_ms(100);                                 // 上电等待
         pdht20->psiic_driver_if->read((DEV_ADDRESS << 1) | 0x01, &r_status, 1); // 读状态字
 
-        if (0x18 != (r_status & 0x18)) {
+        if (0x18 != (r_status & 0x18))
+        {
             // 初始化1B\1C\1E寄存器
 
             // DHT20_ERROR_INITIALIZATION
@@ -34,18 +37,22 @@ dht20_status_t BSP_DHT20_Update(bsp_dht20_handle_t *pdht20)
     pdht20->psiic_driver_if->write(DEV_ADDRESS << 1, 0xAC, pt_cmd, 2); // 触发测量
     pdht20->psiic_driver_if->delay_ms(80);
 
-    for (uint8_t i = 0; i < 5; i++) {
+    for (uint8_t i = 0; i < 5; i++)
+    {
         pdht20->psiic_driver_if->read((DEV_ADDRESS << 1) | 0x01, &r_status, 1); // 读状态字
-        if (r_status & 0x80) {                                                          // 最高位为1，继续等待
+        if (r_status & 0x80)
+        { // 最高位为1，继续等待
             pdht20->psiic_driver_if->delay_ms(80);
-        } else {
+        }
+        else
+        {
             break; // 最高位为0，直接退出
         }
     }
 
     pdht20->psiic_driver_if->read((DEV_ADDRESS << 1) | 0x01, pr_dat, 7); // 读数据
 
-    pdht20->humidity    = (((pr_dat[1] << 12) + (pr_dat[2] << 4) + (pr_dat[3] >> 4)) * 100.0) / 0xfffff;
+    pdht20->humidity = (((pr_dat[1] << 12) + (pr_dat[2] << 4) + (pr_dat[3] >> 4)) * 100.0) / 0xfffff;
     pdht20->temperature = ((((pr_dat[3] << 28) >> 12) + (pr_dat[4] << 8) + (pr_dat[5])) * 200.0) / 0xfffff - 50;
 
     // CRC calculation    pr_dat[6];
@@ -63,23 +70,25 @@ dht20_status_t BSP_DHT20_Inst(const bsp_dht20_handle_t *pdht20,
     bsp_dht20_handle_t *pstmp = pdht20;
 
     static iic_driver_interface_t iic_d_if = {NULL, NULL, NULL, NULL};
-    iic_d_if.init                          = pfiic_init;
-    iic_d_if.write                         = pfiic_write;
-    iic_d_if.read                          = pfiic_read;
-    iic_d_if.delay_ms                      = pfdelay_ms;
+    iic_d_if.init = pfiic_init;
+    iic_d_if.write = pfiic_write;
+    iic_d_if.read = pfiic_read;
+    iic_d_if.delay_ms = pfdelay_ms;
     if (NULL == iic_d_if.init ||
         NULL == iic_d_if.read ||
         NULL == iic_d_if.write ||
-        NULL == iic_d_if.delay_ms) {
+        NULL == iic_d_if.delay_ms)
+    {
         return DHT20_ERROR_IIC_INST;
     }
 
     pstmp->psiic_driver_if = &iic_d_if;
-    pstmp->pfinit          = pfdht20_init;
-    pstmp->pfupdate        = pfdht20_update;
+    pstmp->pfinit = pfdht20_init;
+    pstmp->pfupdate = pfdht20_update;
     if (NULL == pstmp->psiic_driver_if ||
         NULL == pstmp->pfinit ||
-        NULL == pstmp->pfupdate) {
+        NULL == pstmp->pfupdate)
+    {
         return DHT20_ERROR_INSTANCE;
     }
 
